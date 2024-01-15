@@ -9,7 +9,6 @@ namespace CourseSales.Services.Features.Services
 {
     public interface ICourseService
     {
-        IList<Course> GetAllCourses();
-        Course GetCourseById(Guid courseId);
+        Task<Course> AddCourseAsync(string title, string description, decimal price, string thumbnailImage);
     }
 }

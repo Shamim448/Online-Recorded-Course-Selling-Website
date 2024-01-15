@@ -1,4 +1,5 @@
 ﻿using CourseSales.DataAccess.Entities.Course;
+using CourseSales.DataAccess.UnitOfWorks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,15 +10,29 @@ namespace CourseSales.Services.Features.Services
 {
     public class CourseService : ICourseService
     {
-        public CourseService() { }
-        public IList<Course> GetAllCourses()
+        private readonly IUnitOfWork _unitOfWork;
+
+
+        public CourseService(IUnitOfWork unitOfWork)
         {
-            throw new NotImplementedException();
+            _unitOfWork = unitOfWork;
         }
 
-        public Course GetCourseById(Guid courseId)
+        public async Task<Course> AddCourseAsync(string title, string description, decimal price, string thumbnailImage)
         {
-            throw new NotImplementedException();
+            Course course = new Course()
+            {
+                Title = title,
+                Description = description,
+                Price = price,
+                ThumbnailImage = thumbnailImage,
+            };
+
+            await _unitOfWork.BeginTransaction();
+            await _unitOfWork.Courses.AddAsync(course);
+            await _unitOfWork.Commit();
+
+            return course;
         }
     }
 }

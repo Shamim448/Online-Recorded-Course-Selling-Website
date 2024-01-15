@@ -3,6 +3,7 @@ using Autofac;
 using CourseSales.DataAccess.Extentions;
 using CourseSales.Services.Extentions;
 using log4net;
+using CourseSales.Web;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,34 +23,40 @@ var log = LogManager.GetLogger(typeof(Program));
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
-    //containerBuilder.RegisterModule(new WebModule());
+    containerBuilder.RegisterModule(new WebModule());
 });
 
 
-try { 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+try
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
+    // Add services to the container.
+    builder.Services.AddControllersWithViews();
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
+    var app = builder.Build();
 
-app.UseRouting();
+    // Configure the HTTP request pipeline.
+    if (!app.Environment.IsDevelopment())
+    {
+        app.UseExceptionHandler("/Home/Error");
+        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+        app.UseHsts();
+    }
 
-app.UseAuthorization();
+    app.UseHttpsRedirection();
+    app.UseStaticFiles();
 
-app.MapControllerRoute(
+    app.UseRouting();
+
+    app.UseAuthorization();
+
+    app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+    app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
     log.Info("Application is starting");
     app.Run();
 }
