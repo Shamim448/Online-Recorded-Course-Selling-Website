@@ -15,7 +15,6 @@ namespace CourseSales.Web.Controllers
 
         public IActionResult Index()
         {
-            _logger.LogInformation("Log message from Information method");
             return View();
         }
 

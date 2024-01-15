@@ -4,17 +4,20 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>aspnet-CourseSales.Web-ca31891e-6b85-4b40-bcad-ef465cb16c28</UserSecretsId>
   </PropertyGroup>
-
+	<ItemGroup>
+		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="6.0.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+		<PackageReference Include="NHibernate" Version="5.5.0" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+	</ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.24" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.24" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.24" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.24" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.24" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="6.0.0" />
+    <ProjectReference Include="..\CourseSales.DataAccess\CourseSales.DataAccess.csproj" />
+    <ProjectReference Include="..\CourseSales.Services\CourseSales.Services.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Logs\" />
   </ItemGroup>
 
 </Project>
