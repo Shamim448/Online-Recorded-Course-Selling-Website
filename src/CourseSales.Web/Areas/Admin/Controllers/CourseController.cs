@@ -11,12 +11,13 @@ namespace CourseSales.Web.Areas.Admin.Controllers
     {
         ILifetimeScope _scope;
         ILogger<CourseController> _logger;
+        IWebHostEnvironment _webHostEnvironment;
 
-
-        public CourseController(ILifetimeScope scope, ILogger<CourseController> logger)
+        public CourseController(ILifetimeScope scope, ILogger<CourseController> logger, IWebHostEnvironment webHostEnvironment)
         {
             _scope = scope;
             _logger = logger;
+            _webHostEnvironment = webHostEnvironment;
         }
         public async Task<IActionResult> Index()
         {
@@ -33,13 +34,28 @@ namespace CourseSales.Web.Areas.Admin.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CourseCreateModel model)
+        public async Task<IActionResult> Create(CourseCreateModel model, IFormFile? file)
         {
             model.ResolveDependency(_scope);
             if (ModelState.IsValid)
             {
+
                 try
-                {
+                {   
+                    if(file != null)
+                    {
+                        string wwwRootPath = _webHostEnvironment.WebRootPath;
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                        string filePath = Path.Combine(wwwRootPath, @"images\course");
+
+                        var fileStream = new FileStream(Path.Combine(filePath, fileName), FileMode.Create);
+                        
+                            file.CopyTo(fileStream);
+                            fileStream.Dispose();
+
+
+                        model.ThumbnailImage = @"images\course\" + fileName;
+                    }
                     await model.CreateCourseAsync();
                     TempData["success"] = "Create Course Succesfully";
                     return RedirectToAction("Index");
@@ -55,7 +71,7 @@ namespace CourseSales.Web.Areas.Admin.Controllers
                     TempData["error"] = "Course creation failed";
                 }
             }
-            return View();
+            return View(nameof(Index));
         }
     }
 }
