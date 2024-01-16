@@ -10,5 +10,6 @@ namespace CourseSales.Services.Features.Services
     public interface ICourseService
     {
         Task<Course> AddCourseAsync(string title, string description, decimal price, string thumbnailImage);
+        Task <IEnumerable<Course>> GetCourses();
     }
 }

@@ -1,5 +1,16 @@
-﻿@{
+﻿@using CourseSales.DataAccess.Entities.Course
+@model IEnumerable<Course>
+@{
     ViewData["Title"] = "Index";
 }
-
+<partial name="_Notification" />
 <h1>Course Index</h1>
+
+@if (Model.Any())
+{
+    @foreach (var c in Model)
+    {
+        <h1>@c.Title</h1>
+        <h1>@c.Description</h1>
+    }
+}

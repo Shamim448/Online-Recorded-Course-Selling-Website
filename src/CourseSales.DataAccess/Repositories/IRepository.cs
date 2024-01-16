@@ -17,5 +17,6 @@ namespace CourseSales.DataAccess.Repositories
         Task DeleteAsync(TEntity entity);
 
         Task AddOrUpdateAsync(TEntity entity);
+        Task<IEnumerable<TEntity>> GetAllAsync();
     }
 }

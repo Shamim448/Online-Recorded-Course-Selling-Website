@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using CourseSales.DataAccess.Entities.Course;
 using CourseSales.Web.Areas.Admin.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
@@ -17,9 +18,11 @@ namespace CourseSales.Web.Areas.Admin.Controllers
             _scope = scope;
             _logger = logger;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var model =  _scope.Resolve<CourseListModel>();
+            IEnumerable<Course>? result = await model.GetAllCourses();
+            return View(result);
         }
 
         public async Task<IActionResult> Create()
@@ -38,18 +41,21 @@ namespace CourseSales.Web.Areas.Admin.Controllers
                 try
                 {
                     await model.CreateCourseAsync();
+                    TempData["success"] = "Create Course Succesfully";
                     return RedirectToAction("Index");
                 }
                 catch (DuplicateNameException ex)
                 {
-                    _logger.LogError(ex, ex.Message);                  
+                    _logger.LogError(ex, ex.Message);
+                    TempData["warning"] = "Already has this course";
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, "Server Error"); 
+                    _logger.LogError(e, "Server Error");
+                    TempData["error"] = "Course creation failed";
                 }
             }
-            return View(nameof(Index));
+            return View();
         }
     }
 }

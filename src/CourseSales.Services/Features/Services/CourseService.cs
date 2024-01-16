@@ -34,5 +34,13 @@ namespace CourseSales.Services.Features.Services
 
             return course;
         }
+
+        public async Task <IEnumerable<Course>> GetCourses()
+        {
+            //await _unitOfWork.BeginTransaction();
+            return await _unitOfWork.Courses.GetAllAsync();
+        }
+
+        
     }
 }
